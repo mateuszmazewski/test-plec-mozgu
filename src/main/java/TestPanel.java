@@ -26,7 +26,7 @@ public class TestPanel extends JPanel {
 
         JTextArea questionArea = new JTextArea();
         add(questionArea);
-        questionArea.setBounds(testPanelWidth / 2 - 200, 100, 400, 200);
+        questionArea.setBounds(testPanelWidth / 2 - 300, 100, 600, 200);
         questionArea.setEditable(false);
         questionArea.setLineWrap(true);
         questionArea.setWrapStyleWord(true);
@@ -48,28 +48,42 @@ public class TestPanel extends JPanel {
             radioButtonA.setSelected(false);
             radioButtonB.setSelected(false);
         });
-        radioButtonA.setBounds(200, 320, 50, 50);
-        radioButtonB.setBounds(300, 320, 50, 50);
-        radioButtonC.setBounds(400, 320, 50, 50);
+        radioButtonA.setBounds(testPanelWidth/2-75, 320, 50, 50);
+        radioButtonB.setBounds(testPanelWidth/2-25, 320, 50, 50);
+        radioButtonC.setBounds(testPanelWidth/2+25, 320, 50, 50);
 
         JButton nextButton = new JButton("Następne pytanie");
         JButton previousButton = new JButton("Poprzednie pytanie");
+        JButton endButton = new JButton("Zakończ test");
         add(nextButton);
         add(previousButton);
-        nextButton.setBounds(testPanelWidth / 2 - 75 + 150, 400, 150, 40);
-        previousButton.setBounds(testPanelWidth / 2 - 75 - 150, 400, 150, 40);
+        add(endButton);
+        previousButton.setEnabled(false);
+        nextButton.setBounds(testPanelWidth / 2 - 75 + 100, 400, 150, 40);
+        previousButton.setBounds(testPanelWidth / 2 - 75 - 100, 400, 150, 40);
+        endButton.setBounds(testPanelWidth / 2 - 75, 460, 150, 40);
         nextButton.addActionListener(e -> {
             saveAnswer();
             questionNumber++;
             questionArea.setText(questions.getQuestion(questionNumber));
             getAnswer();
-
+            if(questionNumber == 10) {
+                nextButton.setEnabled(false);
+            }
+            previousButton.setEnabled(true);
         });
         previousButton.addActionListener(e -> {
             saveAnswer();
             questionNumber--;
             questionArea.setText(questions.getQuestion(questionNumber));
             getAnswer();
+            if(questionNumber == 1) {
+                previousButton.setEnabled(false);
+            }
+            nextButton.setEnabled(true);
+        });
+        endButton.addActionListener(e -> {
+            saveAnswer();
         });
     }
 
@@ -83,6 +97,7 @@ public class TestPanel extends JPanel {
         } else {
             answers[questionNumber - 1] = Answer.none;
         }
+        repaint(); //Wyświetlenie dotychczasowych odpowiedzi na ekranie
     }
 
     private void getAnswer() {
@@ -109,6 +124,7 @@ public class TestPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawHeading(g);
+        drawAnswers(g);
     }
 
     private void drawHeading(Graphics g) {
@@ -118,5 +134,18 @@ public class TestPanel extends JPanel {
         String s = "TEST 1";
         int stringWidth = fontMetrics.stringWidth(s);
         g.drawString(s, (testPanelWidth - stringWidth) / 2, 50);
+    }
+
+    private void drawAnswers(Graphics g) {
+        g.setFont(new Font("TimesRoman", Font.BOLD, 14));
+        g.setColor(Color.BLACK);
+        FontMetrics fontMetrics = g.getFontMetrics();
+        StringBuilder ans = new StringBuilder();
+        for(int i = 0; i < answers.length; i++) {
+            ans.append(i+1).append(". ").append(answers[i]).append(" ");
+        }
+        String s = ans.toString();
+        int stringWidth = fontMetrics.stringWidth(s);
+        g.drawString(s, (testPanelWidth - stringWidth) / 2, 550);
     }
 }
