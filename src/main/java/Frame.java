@@ -13,14 +13,15 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
-        MainPanel mainPanel = new MainPanel(mainPanelWidth, mainPanelHeight);
+        MainPanel mainPanel = new MainPanel(this, mainPanelWidth, mainPanelHeight);
         mainPanel.setSize(mainPanelWidth, mainPanelHeight);
 
         pack();
         add(mainPanel);
+        setContentPane(mainPanel); //Po uruchomieniu widoczne jest menu główne
         setSize(mainPanel.getSize());
-        setLocationRelativeTo(null);
-        setResizable(false);
+        setLocationRelativeTo(null); //Okno na środku ekranu
+        setResizable(false); //Nie można zmieniać rozmiaru okna
         setVisible(true);
     }
 }
