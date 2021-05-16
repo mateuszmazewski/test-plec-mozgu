@@ -3,6 +3,7 @@ import javax.swing.*;
 public class Frame extends JFrame {
     private final int mainPanelWidth = 800 + getInsets().left;
     private final int mainPanelHeight = 600 + getInsets().top;
+    private MainPanel mainPanel;
 
     public static void main(String[] args) {
         new Frame("Test - płeć mózgu");
@@ -13,7 +14,7 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
-        MainPanel mainPanel = new MainPanel(this, mainPanelWidth, mainPanelHeight);
+        mainPanel = new MainPanel(this, mainPanelWidth, mainPanelHeight);
         mainPanel.setSize(mainPanelWidth, mainPanelHeight);
 
         pack();

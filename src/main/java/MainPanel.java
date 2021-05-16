@@ -5,10 +5,12 @@ class MainPanel extends JPanel {
     private final int mainPanelWidth;
     private final int mainPanelHeight;
     private TestPanel testPanel;
+    Frame frame;
 
     public MainPanel(Frame frame, int width, int height) {
         mainPanelWidth = width;
         mainPanelHeight = height;
+        this.frame = frame;
         setLayout(null);
         setVisible(true);
 
@@ -21,16 +23,21 @@ class MainPanel extends JPanel {
         startButton2.setBounds(mainPanelWidth / 2 - 75, 200, 150, 40);
         startButton1.addActionListener(e -> {
             setVisible(false);
-            testPanel = new TestPanel(frame, mainPanelWidth, mainPanelHeight, 1);
+            testPanel = new TestPanel(this, mainPanelWidth, mainPanelHeight, 1);
             frame.add(testPanel);
             frame.setContentPane(testPanel); //Po naciśnięciu przycisku przełączenie na panel z testem
         });
         startButton2.addActionListener(e -> {
             setVisible(false);
-            testPanel = new TestPanel(frame, mainPanelWidth, mainPanelHeight, 2);
+            testPanel = new TestPanel(this, mainPanelWidth, mainPanelHeight, 2);
             frame.add(testPanel);
             frame.setContentPane(testPanel); //Po naciśnięciu przycisku przełączenie na panel z testem
         });
+    }
+
+    public void showMainPanel() {
+        setVisible(true);
+        frame.setContentPane(this);
     }
 
     @Override
