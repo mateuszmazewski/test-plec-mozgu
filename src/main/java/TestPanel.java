@@ -6,19 +6,13 @@ import java.util.Arrays;
 public class TestPanel extends JPanel {
     private final int testPanelWidth;
     private final int testPanelHeight;
-    private Questions questions = new Questions(1);
+    private final Questions questions;
     private int questionNumber = 1;
     private final JTextArea questionArea = new JTextArea();
+    private final ResultsCalculator resultsCalculator = new ResultsCalculator();
+    private final int testNumber;
 
-    private enum Answer {
-        a, b, c, none
-    }
-
-    private enum Gender {
-        male, female
-    }
-
-    private Answer[] answers = new Answer[10];
+    private final Answer[] answers;
     private final JRadioButton radioButtonA = new JRadioButton("a");
     private final JRadioButton radioButtonB = new JRadioButton("b");
     private final JRadioButton radioButtonC = new JRadioButton("c");
@@ -30,9 +24,12 @@ public class TestPanel extends JPanel {
     public TestPanel(MainPanel mainPanel, int width, int height, int testNumber) {
         testPanelWidth = width;
         testPanelHeight = height;
+        this.testNumber = testNumber;
         setLayout(null);
         setVisible(true);
-        Arrays.fill(answers, Answer.none);
+        questions = new Questions(testNumber);
+        answers = new Answer[questions.getNumberOfQuestions()];
+        Arrays.fill(answers, Answer.x);
 
         add(questionArea);
         questionArea.setBounds(testPanelWidth / 2 - 300, 100, 600, 200);
@@ -84,7 +81,7 @@ public class TestPanel extends JPanel {
             questionNumber++;
             questionArea.setText(questions.getQuestion(questionNumber));
             getAnswer();
-            if (questionNumber == 10) {
+            if (questionNumber == questions.getNumberOfQuestions()) {
                 nextButton.setEnabled(false);
             }
             previousButton.setEnabled(true);
@@ -98,9 +95,7 @@ public class TestPanel extends JPanel {
             }
             nextButton.setEnabled(true);
         });
-        endButton.addActionListener(e -> {
-            endTest();
-        });
+        endButton.addActionListener(e -> endTest());
         returnButton.addActionListener(e -> {
             setVisible(false);
             mainPanel.showMainPanel();
@@ -115,7 +110,7 @@ public class TestPanel extends JPanel {
         } else if (radioButtonC.isSelected()) {
             answers[questionNumber - 1] = Answer.c;
         } else {
-            answers[questionNumber - 1] = Answer.none;
+            answers[questionNumber - 1] = Answer.x;
         }
         repaint(); //Wyświetlenie dotychczasowych odpowiedzi na ekranie
     }
@@ -145,7 +140,7 @@ public class TestPanel extends JPanel {
         int choice;
 
         for (Answer a : answers) {
-            if (a == Answer.none) {
+            if (a == Answer.x) {
                 allAnswers = false;
                 break;
             }
@@ -175,7 +170,8 @@ public class TestPanel extends JPanel {
                 return;
             }
 
-            calculateResults(gender);
+            String results = resultsCalculator.calculateResults(gender, answers, testNumber);
+            questionArea.setText(results);
             radioButtonA.setEnabled(false);
             radioButtonB.setEnabled(false);
             radioButtonC.setEnabled(false);
@@ -183,71 +179,6 @@ public class TestPanel extends JPanel {
             previousButton.setEnabled(false);
             endButton.setEnabled(false);
         }
-    }
-
-    private void calculateResults(Gender gender) {
-        StringBuilder ans = new StringBuilder();
-        int points = 0;
-        for (int i = 0; i < answers.length; i++) {
-            Answer answer = answers[i];
-            ans.append(i + 1).append(". ").append(answer).append("\t--\t");
-
-            switch (answer) {
-                case a: {
-                    if (gender == Gender.male) {
-                        ans.append("10 pkt\n");
-                        points += 10;
-                    } else { //kobieta
-                        ans.append("15 pkt\n");
-                        points += 15;
-                    }
-                    break;
-                }
-                case b:
-                case none: {
-                    ans.append("5 pkt\n");
-                    points += 5;
-                    break;
-                }
-                case c: {
-                    ans.append("-5 pkt\n");
-                    points += -5;
-                    break;
-                }
-            }
-        }
-
-        ans.append("\nSuma punktów: ").append(points).append("\n");
-
-        switch (gender) {
-            case male: {
-                if (points < 0) {
-                    ans.append("Twój mózg jest skrajnie męski");
-                } else if (points < 50) {
-                    ans.append("Płeć twojego mózgu odpowiada twojej płci (mężczyzna)");
-                } else if (points <= 60) {
-                    ans.append("Twój mózg wykazuje się cechami zgodnymi dla obu płci");
-                } else {
-                    ans.append("Twój mózg wykazuje kobiece skłonności");
-                }
-                break;
-            }
-            case female: {
-                if (points < 50) {
-                    ans.append("Twój mózg wykazuje męskie skłonności");
-                } else if (points <= 60) {
-                    ans.append("Twój mózg wykazuje się cechami zgodnymi dla obu płci");
-                } else if (points <= 100) {
-                    ans.append("Płeć twojego mózgu odpowiada twojej płci (kobieta)");
-                } else {
-                    ans.append("Twój mózg jest skrajnie kobiecy");
-                }
-                break;
-            }
-        }
-
-        String s = ans.toString();
-        questionArea.setText(s);
     }
 
     @Override
@@ -261,21 +192,30 @@ public class TestPanel extends JPanel {
         g.setFont(new Font("TimesRoman", Font.BOLD, 20));
         g.setColor(Color.BLACK);
         FontMetrics fontMetrics = g.getFontMetrics();
-        String s = "TEST 1";
+        String s = "TEST " + testNumber;
         int stringWidth = fontMetrics.stringWidth(s);
         g.drawString(s, (testPanelWidth - stringWidth) / 2, 50);
     }
 
     private void drawAnswers(Graphics g) {
-        g.setFont(new Font("TimesRoman", Font.BOLD, 14));
+        g.setFont(new Font("Monospaced", Font.BOLD, 14));
         g.setColor(Color.BLACK);
         FontMetrics fontMetrics = g.getFontMetrics();
-        StringBuilder ans = new StringBuilder("| ");
+        StringBuilder questionNumsSB = new StringBuilder();
+        StringBuilder answersSB = new StringBuilder();
         for (int i = 0; i < answers.length; i++) {
-            ans.append(i + 1).append(". ").append(answers[i]).append(" | ");
+            questionNumsSB.append(i + 1).append(" ");
+            if (i + 1 < 10)
+                answersSB.append(answers[i]).append(" ");
+            else {
+                answersSB.append(answers[i]).append("  ");
+            }
         }
-        String s = ans.toString();
-        int stringWidth = fontMetrics.stringWidth(s);
-        g.drawString(s, (testPanelWidth - stringWidth) / 2, 550);
+        String questionNums = questionNumsSB.toString();
+        String answers = answersSB.toString();
+        int stringWidth = fontMetrics.stringWidth(questionNums);
+        int stringHeight = fontMetrics.getHeight();
+        g.drawString(questionNums, (testPanelWidth - stringWidth) / 2, 525);
+        g.drawString(answers, (testPanelWidth - stringWidth) / 2, 525 + stringHeight);
     }
 }
