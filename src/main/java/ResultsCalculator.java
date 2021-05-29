@@ -99,6 +99,30 @@ public class ResultsCalculator {
             }
         }
 
+        if (testNumber == 1) {
+            ans.append("\n\nWiększość mężczyzn osiąga od 0 do 60 punktów.\n" +
+                    "Większość kobiet osiąga od 50 do 100 punktów.\n" +
+                    "Wyniki pokrywające się, tzn. między 50 a 60 punktami, oznaczają" +
+                    " zgodność w myśleniu obu płci.\nWyniki mężczyzny poniżej 0 i kobiety" +
+                    " powyżej 100 wskazują na mózgi uformowane skrajnie odmiennie od" +
+                    " mózgów płci przeciwnej.\nWyniki mężczyzny powyżej 60 punktów mogą" +
+                    " wskazywać na kobiece skłonności jego umysłu.\nWyniki kobiety poniżej 50" +
+                    " punktów mogą wskazywać na męskie skłonności jej umysłu.");
+        } else if (testNumber == 2) {
+            ans.append("\n\nWiększość mężczyzn osiągnie wynik od 0 do 180, a większość kobiet" +
+                    " od 150 do 300.\nMózgi zaprogramowane głównie na męski sposób myślenia osiągają" +
+                    " zazwyczaj poniżej 150 punktów. Im bliżej zera, tym człowiek jest bardziej" +
+                    " męski i ma wyższy poziom testosteronu. Takie osoby miewają rozwinięte zdolności" +
+                    " logiczne, analityczne i werbalne, bywają zdyscyplinowane i dobrze zorganizowane," +
+                    " lepiej przewidują na podstawie danych statystycznych, nie poddają się emocjom." +
+                    " Punkty poniżej zera to rezultaty bardzo męskie.\nMózgi zaprogramowane na myślenie" +
+                    " kobiece osiągają wynik powyżej 180 punktów. Im wyższa liczba, tym bardziej kobiecy mózg," +
+                    " i tym większe prawdopodobieństwo, że ta osoba będzie miała talenty twórcze," +
+                    " artystyczne i muzyczne. Większość decyzji podejmuje na podstawie intuicji lub" +
+                    " przeczuć. Dobrze również rozwiązuje problemy, stosując przy tym twórcze myślenie i" +
+                    " zrozumienie");
+        }
+
         return ans.toString();
     }
 }

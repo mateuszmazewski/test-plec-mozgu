@@ -18,19 +18,19 @@ public class TestPanel extends JPanel {
     private final JRadioButton radioButtonC = new JRadioButton("c");
     private final JButton nextButton = new JButton("Następne pytanie");
     private final JButton previousButton = new JButton("Poprzednie pytanie");
-    private final JButton endButton = new JButton("Zakończ test");
+    private final JButton endButton = new JButton("Zobacz wyniki");
     private final JButton returnButton = new JButton("Powrót do menu");
 
     public TestPanel(MainPanel mainPanel, int width, int height, int testNumber) {
         testPanelWidth = width;
         testPanelHeight = height;
         this.testNumber = testNumber;
-        setLayout(null);
-        setVisible(true);
         questions = new Questions(testNumber);
         answers = new Answer[questions.getNumberOfQuestions()];
         Arrays.fill(answers, Answer.x);
 
+        setLayout(null);
+        setVisible(true);
         add(questionArea);
         questionArea.setBounds(testPanelWidth / 2 - 300, 100, 600, 200);
         questionArea.setEditable(false);
@@ -44,7 +44,7 @@ public class TestPanel extends JPanel {
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         add(scrollPane);
-        questionArea.setText(questions.getQuestion(questionNumber));
+        questionArea.setText(questions.getQuestion(questionNumber)); //pierwsze pytanie w polu tekstowym
 
         add(radioButtonA);
         add(radioButtonB);
@@ -80,7 +80,7 @@ public class TestPanel extends JPanel {
         nextButton.addActionListener(e -> {
             questionNumber++;
             questionArea.setText(questions.getQuestion(questionNumber));
-            getAnswer();
+            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
             if (questionNumber == questions.getNumberOfQuestions()) {
                 nextButton.setEnabled(false);
             }
@@ -89,7 +89,7 @@ public class TestPanel extends JPanel {
         previousButton.addActionListener(e -> {
             questionNumber--;
             questionArea.setText(questions.getQuestion(questionNumber));
-            getAnswer();
+            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
             if (questionNumber == 1) {
                 previousButton.setEnabled(false);
             }
@@ -136,7 +136,7 @@ public class TestPanel extends JPanel {
     }
 
     private void endTest() {
-        boolean allAnswers = true;
+        boolean allAnswers = true; //czy udzielono odpowiedzi na wszystkie pytania?
         int choice;
 
         for (Answer a : answers) {
@@ -158,7 +158,7 @@ public class TestPanel extends JPanel {
                     "Zakończenie testu", JOptionPane.YES_NO_OPTION);
         }
 
-        if (choice == 0) {
+        if (choice == 0) { // 0 oznacza, że kliknięto "yes"
             Object[] options = {"Mężczyzna", "Kobieta"};
             int gend = JOptionPane.showOptionDialog(this, "Jaka jest twoja płeć?", "Wybór płci",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
@@ -167,17 +167,17 @@ public class TestPanel extends JPanel {
             if (gend == 1) {
                 gender = Gender.female;
             } else if (gend != 0) {
-                return;
+                return; //jeśli nie zaznaczono płci, tylko zamknięto okno -- powrót do testu
             }
 
             String results = resultsCalculator.calculateResults(gender, answers, testNumber);
             questionArea.setText(results);
-            radioButtonA.setEnabled(false);
-            radioButtonB.setEnabled(false);
-            radioButtonC.setEnabled(false);
-            nextButton.setEnabled(false);
-            previousButton.setEnabled(false);
-            endButton.setEnabled(false);
+            //radioButtonA.setEnabled(false);
+            //radioButtonB.setEnabled(false);
+            //radioButtonC.setEnabled(false);
+            //nextButton.setEnabled(false);
+            //previousButton.setEnabled(false);
+            //endButton.setEnabled(false);
         }
     }
 
