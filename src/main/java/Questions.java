@@ -1,5 +1,5 @@
 public class Questions {
-    String[] questions;
+    private String[] questions;
 
     public Questions(int testNumber) {
         if (testNumber == 1) {
