@@ -97,8 +97,24 @@ public class TestPanel extends JPanel {
         });
         endButton.addActionListener(e -> endTest());
         returnButton.addActionListener(e -> {
-            setVisible(false);
-            mainPanel.showMainPanel();
+            boolean thereAreAnswers = false;
+            for (Answer a : answers) {
+                if (a != Answer.x) {
+                    thereAreAnswers = true;
+                    break;
+                }
+            }
+
+            int choice = 0;
+            if (thereAreAnswers) {
+                choice = JOptionPane.showConfirmDialog(this,
+                        "Udzielono odpowiedzi. Czy chcesz wyjść bez wyświetlenia wyników?",
+                        "Powrót do menu", JOptionPane.YES_NO_OPTION);
+            }
+            if (choice == 0) { // 0 oznacza, że kliknięto "yes"
+                setVisible(false);
+                mainPanel.showMainPanel();
+            }
         });
     }
 

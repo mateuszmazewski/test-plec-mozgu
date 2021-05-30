@@ -1,6 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 class MainPanel extends JPanel {
     private final int mainPanelWidth;
@@ -18,11 +21,14 @@ class MainPanel extends JPanel {
 
         JButton startButton1 = new JButton("Start - test 1");
         JButton startButton2 = new JButton("Start - test 2");
+        JButton exitButton = new JButton("Exit");
 
         add(startButton1);
         add(startButton2);
+        add(exitButton);
         startButton1.setBounds(mainPanelWidth / 2 - 75, 100, 150, 40);
-        startButton2.setBounds(mainPanelWidth / 2 - 75, 200, 150, 40);
+        startButton2.setBounds(mainPanelWidth / 2 - 75, 160, 150, 40);
+        exitButton.setBounds(mainPanelWidth / 2 - 75, 220, 150, 40);
         startButton1.addActionListener(e -> {
             setVisible(false);
             testPanel = new TestPanel(this, mainPanelWidth, mainPanelHeight, 1);
@@ -35,9 +41,12 @@ class MainPanel extends JPanel {
             frame.add(testPanel);
             frame.setContentPane(testPanel); //Po naciśnięciu przycisku przełączenie na panel z testem
         });
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
 
         add(textArea);
-        textArea.setBounds(mainPanelWidth / 2 - 300, 300, 600, 200);
+        textArea.setBounds(mainPanelWidth / 2 - 300, 300, 600, 160);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
@@ -55,6 +64,7 @@ class MainPanel extends JPanel {
                 " twoje wybory, wartości, zachowanie, styl, orientację i preferencje.\n\nBrak odpowiedzi również jest odpowiedzią!\n" +
                 "Szczegóły odnośnie interpretacji wyników konkretnego testu można zobaczyć po wykonaniu danego testu.";
         textArea.setText(info);
+        textArea.setOpaque(false);
     }
 
     public void showMainPanel() {
@@ -65,6 +75,7 @@ class MainPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        paintBackground(g);
         drawHeading(g);
     }
 
@@ -75,5 +86,15 @@ class MainPanel extends JPanel {
         String s = "TEST - PŁEĆ MÓZGU";
         int stringWidth = fontMetrics.stringWidth(s);
         g.drawString(s, (mainPanelWidth - stringWidth) / 2, 50);
+    }
+
+    private void paintBackground(Graphics g) {
+        try {
+            File brain = new File("brain.png");
+            g.drawImage(ImageIO.read(brain), 0, 0, 300, 234, null);
+            g.drawImage(ImageIO.read(brain), mainPanelWidth - 300, 0, 300, 234, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

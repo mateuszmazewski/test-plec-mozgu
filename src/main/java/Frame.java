@@ -1,4 +1,7 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 
 public class Frame extends JFrame {
     private final int mainPanelWidth = 800 + getInsets().left;
@@ -17,12 +20,17 @@ public class Frame extends JFrame {
         mainPanel = new MainPanel(this, mainPanelWidth, mainPanelHeight);
         mainPanel.setSize(mainPanelWidth, mainPanelHeight);
 
-        pack();
         add(mainPanel);
         setContentPane(mainPanel); //Po uruchomieniu widoczne jest menu główne
         setSize(mainPanel.getSize());
         setLocationRelativeTo(null); //Okno na środku ekranu
         setResizable(false); //Nie można zmieniać rozmiaru okna
         setVisible(true);
+
+        try {
+            setIconImage(ImageIO.read(new File("icon.png")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
