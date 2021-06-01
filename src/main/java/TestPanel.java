@@ -11,6 +11,7 @@ public class TestPanel extends JPanel {
     private final JTextArea questionArea = new JTextArea();
     private final ResultsCalculator resultsCalculator = new ResultsCalculator();
     private final int testNumber;
+    private boolean testEnded = false;
 
     private final Answer[] answers;
     private final JRadioButton radioButtonA = new JRadioButton("a");
@@ -106,7 +107,7 @@ public class TestPanel extends JPanel {
             }
 
             int choice = 0;
-            if (thereAreAnswers) {
+            if (thereAreAnswers && !testEnded) {
                 choice = JOptionPane.showConfirmDialog(this,
                         "Udzielono odpowiedzi. Czy chcesz wyjść bez wyświetlenia wyników?",
                         "Powrót do menu", JOptionPane.YES_NO_OPTION);
@@ -186,14 +187,15 @@ public class TestPanel extends JPanel {
                 return; //jeśli nie zaznaczono płci, tylko zamknięto okno -- powrót do testu
             }
 
+            testEnded = true;
             String results = resultsCalculator.calculateResults(gender, answers, testNumber);
             questionArea.setText(results);
-            //radioButtonA.setEnabled(false);
-            //radioButtonB.setEnabled(false);
-            //radioButtonC.setEnabled(false);
-            //nextButton.setEnabled(false);
-            //previousButton.setEnabled(false);
-            //endButton.setEnabled(false);
+            radioButtonA.setEnabled(false);
+            radioButtonB.setEnabled(false);
+            radioButtonC.setEnabled(false);
+            nextButton.setEnabled(false);
+            previousButton.setEnabled(false);
+            endButton.setEnabled(false);
         }
     }
 
