@@ -44,11 +44,11 @@ public class InfoPanel extends JPanel {
     }
 
     private void drawInfo(Graphics g) {
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 14));
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         g.setColor(Color.BLACK);
         String info = "\u2022Testy mają na celu wykazanie płci, męskości lub kobiecości, wzorców twojego mózgu.\n" +
-                "\u2022Nie ma złych ani dobrych odpowiedzi. Rezultat to po prostu wskazówka co do poziomu\n" +
-                "męskiego hormonu, który twój mózg otrzymał między szóstym a ósmym tygodniem od poczęcia.\n" +
+                "\u2022Nie ma złych ani dobrych odpowiedzi. Rezultat to po prostu wskazówka co do poziomu męskiego\n" +
+                "  hormonu, który twój mózg otrzymał między szóstym a ósmym tygodniem od poczęcia.\n" +
                 "\u2022To miało i ma wpływ na twoje wybory, wartości, zachowanie, styl, orientację i preferencje.\n" +
                 "\u2022Brak odpowiedzi również jest odpowiedzią!\n" +
                 "\u2022Szczegóły odnośnie interpretacji wyników konkretnego testu można zobaczyć po wykonaniu danego testu.";
