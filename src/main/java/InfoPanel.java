@@ -47,14 +47,15 @@ public class InfoPanel extends JPanel {
         g.setFont(new Font("TimesRoman", Font.PLAIN, 16));
         g.setColor(Color.BLACK);
         String info = "\u2022Testy mają na celu wykazanie płci, męskości lub kobiecości, wzorców twojego mózgu.\n" +
-                "\u2022Nie ma złych ani dobrych odpowiedzi. Rezultat to po prostu wskazówka co do poziomu męskiego\n" +
-                "  hormonu, który twój mózg otrzymał między szóstym a ósmym tygodniem od poczęcia.\n" +
+                "\u2022Nie ma złych ani dobrych odpowiedzi.\n" +
+                "\u2022Rezultat to po prostu wskazówka co do poziomu męskiego hormonu, który twój mózg otrzymał między\n" +
+                "  szóstym a ósmym tygodniem od poczęcia.\n" +
                 "\u2022To miało i ma wpływ na twoje wybory, wartości, zachowanie, styl, orientację i preferencje.\n" +
                 "\u2022Brak odpowiedzi również jest odpowiedzią!\n" +
-                "\u2022Szczegóły odnośnie interpretacji wyników konkretnego testu można zobaczyć po wykonaniu danego testu.";
-        String literature = "Literatura:\n" +
+                "\u2022Szczegóły odnośnie interpretacji wyników konkretnego testu można zobaczyć po wykonaniu danego testu.\n\n\n" +
+                "Literatura:\n" +
                 "\u2022\"płeć mózgu\", Anne Moir, David Jessel, Państwowy Instytut Wydawniczy, 1993";
+
         drawString(g, info, 30, 100);
-        drawString(g, literature, 30, 250);
     }
 }
