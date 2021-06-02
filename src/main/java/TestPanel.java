@@ -22,6 +22,9 @@ public class TestPanel extends JPanel {
     private final JButton previousButton = new JButton("Poprzednie pytanie");
     private final JButton endButton = new JButton("Zobacz wyniki");
     private final JButton returnButton = new JButton("Powrót do menu");
+    private final JButton goToQuestionButton = new JButton("Przejdź");
+    private final JLabel goToQuestionLabel = new JLabel("Przejdź do pytania");
+    private final JTextField goToQuestionTextField = new JTextField();
 
     public TestPanel(MainPanel mainPanel, int width, int height, int testNumber) {
         testPanelWidth = width;
@@ -66,37 +69,22 @@ public class TestPanel extends JPanel {
             radioButtonB.setSelected(false);
             saveAnswer();
         });
-        radioButtonA.setBounds(testPanelWidth / 2 - 75, 320, 50, 50);
-        radioButtonB.setBounds(testPanelWidth / 2 - 25, 320, 50, 50);
-        radioButtonC.setBounds(testPanelWidth / 2 + 25, 320, 50, 50);
+        radioButtonA.setBounds(testPanelWidth / 2 - 75, 300, 40, 40);
+        radioButtonB.setBounds(testPanelWidth / 2 - 25, 300, 40, 40);
+        radioButtonC.setBounds(testPanelWidth / 2 + 25, 300, 40, 40);
 
         add(nextButton);
         add(previousButton);
         add(endButton);
         add(returnButton);
+        add(goToQuestionButton);
         previousButton.setEnabled(false);
-        nextButton.setBounds(testPanelWidth / 2 - 75 + 100, 400, 150, 40);
-        previousButton.setBounds(testPanelWidth / 2 - 75 - 100, 400, 150, 40);
+        nextButton.setBounds(testPanelWidth / 2 - 75 + 100, 360, 150, 40);
+        previousButton.setBounds(testPanelWidth / 2 - 75 - 100, 360, 150, 40);
         endButton.setBounds(testPanelWidth / 2 - 75, 460, 150, 40);
         returnButton.setBounds(20, 20, 150, 40);
-        nextButton.addActionListener(e -> {
-            questionNumber++;
-            questionArea.setText(questions.getQuestion(questionNumber));
-            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
-            if (questionNumber == questions.getNumberOfQuestions()) {
-                nextButton.setEnabled(false);
-            }
-            previousButton.setEnabled(true);
-        });
-        previousButton.addActionListener(e -> {
-            questionNumber--;
-            questionArea.setText(questions.getQuestion(questionNumber));
-            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
-            if (questionNumber == 1) {
-                previousButton.setEnabled(false);
-            }
-            nextButton.setEnabled(true);
-        });
+        nextButton.addActionListener(e -> goToQuestion(++questionNumber));
+        previousButton.addActionListener(e -> goToQuestion(--questionNumber));
         endButton.addActionListener(e -> endTest());
         returnButton.addActionListener(e -> {
             boolean thereAreAnswers = false;
@@ -118,6 +106,29 @@ public class TestPanel extends JPanel {
                 mainPanel.showMainPanel();
             }
         });
+
+        add(goToQuestionLabel);
+        goToQuestionLabel.setBounds(testPanelWidth / 2 - 140, 420, 110, 20);
+        add(goToQuestionTextField);
+        goToQuestionTextField.setBounds(testPanelWidth / 2 - 30, 420, 60, 20);
+        goToQuestionButton.setBounds(testPanelWidth / 2 + 40, 420, 80, 20);
+
+        goToQuestionButton.addActionListener(e -> {
+            String text = goToQuestionTextField.getText();
+            int qNumber;
+            try {
+                qNumber = Integer.parseInt(text.trim()); //tekst z usuniętymi znakami białymi z krańców
+                if (qNumber > 0 && qNumber <= questions.getNumberOfQuestions()) {
+                    goToQuestion(qNumber);
+                    goToQuestionTextField.setText("");
+                } else {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showConfirmDialog(null, "Nieprawidłowa wartość", "Błąd", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+                goToQuestionTextField.setText("");
+            }
+        });
     }
 
     private void saveAnswer() {
@@ -134,15 +145,16 @@ public class TestPanel extends JPanel {
     }
 
     private void getAnswer() {
-        if (answers[questionNumber - 1] == Answer.a) {
+        Answer actualAnswer = answers[questionNumber - 1];
+        if (actualAnswer == Answer.a) {
             radioButtonA.setSelected(true);
             radioButtonB.setSelected(false);
             radioButtonC.setSelected(false);
-        } else if (answers[questionNumber - 1] == Answer.b) {
+        } else if (actualAnswer == Answer.b) {
             radioButtonA.setSelected(false);
             radioButtonB.setSelected(true);
             radioButtonC.setSelected(false);
-        } else if (answers[questionNumber - 1] == Answer.c) {
+        } else if (actualAnswer == Answer.c) {
             radioButtonA.setSelected(false);
             radioButtonB.setSelected(false);
             radioButtonC.setSelected(true);
@@ -150,6 +162,24 @@ public class TestPanel extends JPanel {
             radioButtonA.setSelected(false);
             radioButtonB.setSelected(false);
             radioButtonC.setSelected(false);
+        }
+    }
+
+    private void goToQuestion(int qNumber) {
+        if (qNumber > 0 && qNumber <= questions.getNumberOfQuestions()) {
+            questionNumber = qNumber;
+            questionArea.setText(questions.getQuestion(questionNumber));
+            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
+            if (questionNumber == 1) {
+                previousButton.setEnabled(false);
+                nextButton.setEnabled(true);
+            } else if (questionNumber == questions.getNumberOfQuestions()) {
+                previousButton.setEnabled(true);
+                nextButton.setEnabled(false);
+            } else {
+                previousButton.setEnabled(true);
+                nextButton.setEnabled(true);
+            }
         }
     }
 
@@ -197,6 +227,9 @@ public class TestPanel extends JPanel {
             nextButton.setVisible(false);
             previousButton.setVisible(false);
             endButton.setVisible(false);
+            goToQuestionButton.setVisible(false);
+            goToQuestionTextField.setVisible(false);
+            goToQuestionLabel.setVisible(false);
 
             points = resultsCalculator.getPoints();
             repaint();
