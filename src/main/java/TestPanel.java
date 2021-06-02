@@ -12,6 +12,7 @@ public class TestPanel extends JPanel {
     private final ResultsCalculator resultsCalculator = new ResultsCalculator();
     private final int testNumber;
     private boolean testEnded = false;
+    private int points = 0;
 
     private final Answer[] answers;
     private final JRadioButton radioButtonA = new JRadioButton("a");
@@ -190,12 +191,15 @@ public class TestPanel extends JPanel {
             testEnded = true;
             String results = resultsCalculator.calculateResults(gender, answers, testNumber);
             questionArea.setText(results);
-            radioButtonA.setEnabled(false);
-            radioButtonB.setEnabled(false);
-            radioButtonC.setEnabled(false);
-            nextButton.setEnabled(false);
-            previousButton.setEnabled(false);
-            endButton.setEnabled(false);
+            radioButtonA.setVisible(false);
+            radioButtonB.setVisible(false);
+            radioButtonC.setVisible(false);
+            nextButton.setVisible(false);
+            previousButton.setVisible(false);
+            endButton.setVisible(false);
+
+            points = resultsCalculator.getPoints();
+            repaint();
         }
     }
 
@@ -204,6 +208,9 @@ public class TestPanel extends JPanel {
         super.paintComponent(g);
         drawHeading(g);
         drawAnswers(g);
+        if (testEnded) {
+            drawResults(g);
+        }
     }
 
     private void drawHeading(Graphics g) {
@@ -235,5 +242,101 @@ public class TestPanel extends JPanel {
         int stringHeight = fontMetrics.getHeight();
         g.drawString(questionNums, (testPanelWidth - stringWidth) / 2, 525);
         g.drawString(answers, (testPanelWidth - stringWidth) / 2, 525 + stringHeight);
+    }
+
+    private void drawResults(Graphics g) {
+        int minPoints = 0;
+        int maxPoints = 0;
+        if (testNumber == 1) {
+            minPoints = -50;
+            maxPoints = 150;
+        } else if (testNumber == 2) {
+            minPoints = -150;
+            maxPoints = 450;
+        }
+
+        int lineLength = 600;
+        int lineStartX = testPanelWidth / 2 - lineLength / 2;
+        int lineEndX = testPanelWidth / 2 + lineLength / 2;
+        int lineY = 400;
+        int step = (lineLength / (maxPoints - minPoints)) * 10; // 1 podziałka na osi = 10 punktów
+        g.drawLine(lineStartX, lineY, lineEndX, lineY);
+
+        int actualNumber = minPoints;
+        String number;
+        FontMetrics fontMetrics = g.getFontMetrics();
+        int stringWidth;
+        int zeroX = 0;
+
+        for (int x = lineStartX; x <= lineEndX; x += step) {
+            g.drawLine(x, lineY + 10, x, lineY - 10);
+            if (testNumber == 2 && x % 50 == 0) { //dla testu 2 dłuższa kreska pionowa co 50 na osi
+                g.drawLine(x, lineY + 15, x, lineY - 15);
+            }
+
+            number = Integer.toString(actualNumber);
+            if (actualNumber == 0) {
+                zeroX = x; //zapisanie pozycji zera na osi
+            }
+            stringWidth = fontMetrics.stringWidth(number);
+            if (testNumber == 1 || (testNumber == 2 && x % 50 == 0)) { //dla testu 2 liczba co 50 na osi
+                g.drawString(number, x - stringWidth / 2, lineY + 30);
+            }
+            actualNumber += 10;
+        }
+
+        String extremelyManly = "skrajnie męski";
+        int extremelyManlyWidth = fontMetrics.stringWidth(extremelyManly);
+        String extremelyFeminine = "skrajnie kobiecy";
+        int extremelyFeminineWidth = fontMetrics.stringWidth(extremelyFeminine);
+        String manly = "męski";
+        int manlyWidth = fontMetrics.stringWidth(manly);
+        String feminine = "kobiecy";
+        int feminineWidth = fontMetrics.stringWidth(feminine);
+        String shared = "wspólny";
+        int sharedWidth = fontMetrics.stringWidth(shared);
+        g.setFont(new Font("TimesRoman", Font.BOLD, 14));
+
+        Color transparentBlue = new Color(0, 0, 255, 127);
+        Color transparentCyan = new Color(0, 200, 255, 127);
+        Color transparentDarkPink = new Color(255, 0, 150, 127);
+        Color transparentRed = new Color(255, 0, 0, 127);
+        Color transparentPurple = new Color(127, 100, 203, 127);
+
+        if (testNumber == 1) {
+            g.setColor(transparentBlue);
+            g.fillRect(lineStartX, lineY - 15, step * 5, 30); //przedział skrajnie męski
+            g.drawString(extremelyManly, lineStartX + (step * 5) / 2 - extremelyManlyWidth / 2, lineY - 30);
+            g.setColor(transparentCyan);
+            g.fillRect(zeroX, lineY - 15, step * 6, 30); //przedział męski
+            g.drawString(manly, zeroX + (step * 6) / 2 - manlyWidth / 2 - 20, lineY - 30);
+            g.setColor(transparentDarkPink);
+            g.fillRect(zeroX + step * 5, lineY - 15, step * 5, 30); //przedział kobiecy
+            g.drawString(feminine, zeroX + step * 5 + (step * 5) / 2 - feminineWidth / 2 + 20, lineY - 30);
+            g.setColor(transparentRed);
+            g.fillRect(zeroX + step * 10, lineY - 15, step * 5, 30); //przedział skrajnie kobiecy
+            g.drawString(extremelyFeminine, zeroX + step * 10 + (step * 5) / 2 - extremelyFeminineWidth / 2, lineY - 30);
+            g.setColor(transparentPurple);
+            g.drawString(shared, zeroX + step * 5 + step / 2 - sharedWidth / 2, lineY - 30); //przedział wspólny
+        } else if (testNumber == 2) {
+            g.setColor(transparentBlue);
+            g.fillRect(lineStartX, lineY - 15, step * 15, 30); //przedział skrajnie męski
+            g.drawString(extremelyManly, lineStartX + (step * 15) / 2 - extremelyManlyWidth / 2, lineY - 30);
+            g.setColor(transparentCyan);
+            g.fillRect(zeroX, lineY - 15, step * 18, 30); //przedział męski
+            g.drawString(manly, zeroX + (step * 18) / 2 - manlyWidth / 2 - 20, lineY - 30);
+            g.setColor(transparentDarkPink);
+            g.fillRect(zeroX + step * 15, lineY - 15, step * 15, 30); //przedział kobiecy
+            g.drawString(feminine, zeroX + step * 15 + (step * 15) / 2 - feminineWidth / 2 + 20, lineY - 30);
+            g.setColor(transparentRed);
+            g.fillRect(zeroX + step * 30, lineY - 15, step * 15, 30); //przedział skrajnie kobiecy
+            g.drawString(extremelyFeminine, zeroX + step * 30 + (step * 15) / 2 - extremelyFeminineWidth / 2, lineY - 30);
+            g.setColor(transparentPurple);
+            g.drawString(shared, zeroX + step * 15 + (step * 3) / 2 - sharedWidth / 2, lineY - 30); //przedział wspólny
+        }
+
+        int actualPointsX = (int) (zeroX + step * ((double) (points) / 10));
+        g.setColor(Color.RED);
+        g.fillRect(actualPointsX - 2, lineY - 15, 5, 30);
     }
 }

@@ -1,4 +1,6 @@
 public class ResultsCalculator {
+    private int points;
+
     public String calculateResults(Gender gender, Answer[] answers, int testNumber) {
         StringBuilder ans = new StringBuilder();
         int points = 0;
@@ -123,6 +125,11 @@ public class ResultsCalculator {
                     " zrozumienie");
         }
 
+        this.points = points;
         return ans.toString();
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
