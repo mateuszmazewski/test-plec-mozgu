@@ -4,8 +4,8 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class TestPanel extends JPanel {
-    private final int testPanelWidth;
-    private final int testPanelHeight;
+    private final int panelWidth;
+    private final int panelHeight;
     private final Questions questions;
     private int questionNumber = 1;
     private final JTextArea questionArea = new JTextArea();
@@ -27,8 +27,9 @@ public class TestPanel extends JPanel {
     private final JTextField goToQuestionTextField = new JTextField();
 
     public TestPanel(MainPanel mainPanel, int width, int height, int testNumber) {
-        testPanelWidth = width;
-        testPanelHeight = height;
+        panelWidth = width;
+        panelHeight = height;
+        setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.testNumber = testNumber;
         questions = new Questions(testNumber);
         answers = new Answer[questions.getNumberOfQuestions()];
@@ -37,7 +38,7 @@ public class TestPanel extends JPanel {
         setLayout(null);
         setVisible(true);
         add(questionArea);
-        questionArea.setBounds(testPanelWidth / 2 - 300, 100, 600, 200);
+        questionArea.setBounds(panelWidth / 2 - 350, 100, 700, 200);
         questionArea.setEditable(false);
         questionArea.setLineWrap(true);
         questionArea.setWrapStyleWord(true);
@@ -69,9 +70,9 @@ public class TestPanel extends JPanel {
             radioButtonB.setSelected(false);
             saveAnswer();
         });
-        radioButtonA.setBounds(testPanelWidth / 2 - 75, 300, 40, 40);
-        radioButtonB.setBounds(testPanelWidth / 2 - 25, 300, 40, 40);
-        radioButtonC.setBounds(testPanelWidth / 2 + 25, 300, 40, 40);
+        radioButtonA.setBounds(panelWidth / 2 - 75, 300, 40, 40);
+        radioButtonB.setBounds(panelWidth / 2 - 25, 300, 40, 40);
+        radioButtonC.setBounds(panelWidth / 2 + 25, 300, 40, 40);
 
         add(nextButton);
         add(previousButton);
@@ -79,9 +80,9 @@ public class TestPanel extends JPanel {
         add(returnButton);
         add(goToQuestionButton);
         previousButton.setEnabled(false);
-        nextButton.setBounds(testPanelWidth / 2 - 75 + 100, 360, 150, 40);
-        previousButton.setBounds(testPanelWidth / 2 - 75 - 100, 360, 150, 40);
-        endButton.setBounds(testPanelWidth / 2 - 75, 460, 150, 40);
+        nextButton.setBounds(panelWidth / 2 - 75 + 100, 360, 150, 40);
+        previousButton.setBounds(panelWidth / 2 - 75 - 100, 360, 150, 40);
+        endButton.setBounds(panelWidth / 2 - 75, 460, 150, 40);
         returnButton.setBounds(20, 20, 150, 40);
         nextButton.addActionListener(e -> goToQuestion(++questionNumber));
         previousButton.addActionListener(e -> goToQuestion(--questionNumber));
@@ -108,10 +109,10 @@ public class TestPanel extends JPanel {
         });
 
         add(goToQuestionLabel);
-        goToQuestionLabel.setBounds(testPanelWidth / 2 - 140, 420, 110, 20);
+        goToQuestionLabel.setBounds(panelWidth / 2 - 140, 420, 110, 20);
         add(goToQuestionTextField);
-        goToQuestionTextField.setBounds(testPanelWidth / 2 - 30, 420, 60, 20);
-        goToQuestionButton.setBounds(testPanelWidth / 2 + 40, 420, 80, 20);
+        goToQuestionTextField.setBounds(panelWidth / 2 - 30, 420, 60, 20);
+        goToQuestionButton.setBounds(panelWidth / 2 + 40, 420, 80, 20);
 
         goToQuestionButton.addActionListener(e -> {
             String text = goToQuestionTextField.getText();
@@ -169,7 +170,7 @@ public class TestPanel extends JPanel {
         if (qNumber > 0 && qNumber <= questions.getNumberOfQuestions()) {
             questionNumber = qNumber;
             questionArea.setText(questions.getQuestion(questionNumber));
-            getAnswer(); //przełączenie pytania powoduje zaznaczenie wcześniej wybranej odpowiedzi
+            getAnswer(); //przełączenie pytania powoduje zaznaczenie odpowiedzi udzielonej na to pytanie
             if (questionNumber == 1) {
                 previousButton.setEnabled(false);
                 nextButton.setEnabled(true);
@@ -252,7 +253,7 @@ public class TestPanel extends JPanel {
         FontMetrics fontMetrics = g.getFontMetrics();
         String s = "TEST " + testNumber;
         int stringWidth = fontMetrics.stringWidth(s);
-        g.drawString(s, (testPanelWidth - stringWidth) / 2, 50);
+        g.drawString(s, (panelWidth - stringWidth) / 2, 50);
     }
 
     private void drawAnswers(Graphics g) {
@@ -273,8 +274,8 @@ public class TestPanel extends JPanel {
         String answers = answersSB.toString();
         int stringWidth = fontMetrics.stringWidth(questionNums);
         int stringHeight = fontMetrics.getHeight();
-        g.drawString(questionNums, (testPanelWidth - stringWidth) / 2, 525);
-        g.drawString(answers, (testPanelWidth - stringWidth) / 2, 525 + stringHeight);
+        g.drawString(questionNums, (panelWidth - stringWidth) / 2, 550);
+        g.drawString(answers, (panelWidth - stringWidth) / 2, 550 + stringHeight);
     }
 
     private void drawResults(Graphics g) {
@@ -289,8 +290,8 @@ public class TestPanel extends JPanel {
         }
 
         int lineLength = 600;
-        int lineStartX = testPanelWidth / 2 - lineLength / 2;
-        int lineEndX = testPanelWidth / 2 + lineLength / 2;
+        int lineStartX = panelWidth / 2 - lineLength / 2;
+        int lineEndX = panelWidth / 2 + lineLength / 2;
         int lineY = 400;
         int step = (lineLength / (maxPoints - minPoints)) * 10; // 1 podziałka na osi = 10 punktów
         g.drawLine(lineStartX, lineY, lineEndX, lineY);

@@ -2,14 +2,15 @@ import javax.swing.*;
 import java.awt.*;
 
 class MainPanel extends JPanel {
-    private final int mainPanelWidth;
-    private final int mainPanelHeight;
+    private final int panelWidth;
+    private final int panelHeight;
     private TestPanel testPanel;
     private final Frame frame;
 
     public MainPanel(Frame frame, int width, int height) {
-        mainPanelWidth = width;
-        mainPanelHeight = height;
+        panelWidth = width;
+        panelHeight = height;
+        setPreferredSize(new Dimension(panelWidth, panelHeight));
         this.frame = frame;
         setLayout(null);
         setVisible(true);
@@ -25,25 +26,25 @@ class MainPanel extends JPanel {
         add(exitButton);
         int buttonWidth = 150;
         int buttonHeight = 40;
-        startButton1.setBounds(mainPanelWidth / 2 - buttonWidth / 2, 100, buttonWidth, buttonHeight);
-        startButton2.setBounds(mainPanelWidth / 2 - buttonWidth / 2, 160, buttonWidth, buttonHeight);
-        infoButton.setBounds(mainPanelWidth / 2 - buttonWidth / 2, 220, buttonWidth, buttonHeight);
-        exitButton.setBounds(mainPanelWidth / 2 - buttonWidth / 2, 280, buttonWidth, buttonHeight);
+        startButton1.setBounds(panelWidth / 2 - buttonWidth / 2, 100, buttonWidth, buttonHeight);
+        startButton2.setBounds(panelWidth / 2 - buttonWidth / 2, 160, buttonWidth, buttonHeight);
+        infoButton.setBounds(panelWidth / 2 - buttonWidth / 2, 220, buttonWidth, buttonHeight);
+        exitButton.setBounds(panelWidth / 2 - buttonWidth / 2, 280, buttonWidth, buttonHeight);
         startButton1.addActionListener(e -> {
             setVisible(false);
-            testPanel = new TestPanel(this, mainPanelWidth, mainPanelHeight, 1);
+            testPanel = new TestPanel(this, panelWidth, panelHeight, 1);
             frame.add(testPanel);
             frame.setContentPane(testPanel); //Po naciśnięciu przycisku przełączenie na panel z testem
         });
         startButton2.addActionListener(e -> {
             setVisible(false);
-            testPanel = new TestPanel(this, mainPanelWidth, mainPanelHeight, 2);
+            testPanel = new TestPanel(this, panelWidth, panelHeight, 2);
             frame.add(testPanel);
             frame.setContentPane(testPanel); //Po naciśnięciu przycisku przełączenie na panel z testem
         });
         infoButton.addActionListener(e -> {
             setVisible(false);
-            InfoPanel infoPanel = new InfoPanel(this, mainPanelWidth, mainPanelHeight);
+            InfoPanel infoPanel = new InfoPanel(this, panelWidth, panelHeight);
             frame.add(infoPanel);
             frame.setContentPane(infoPanel); //Po naciśnięciu przycisku przełączenie na panel z informacjami
         });
@@ -68,14 +69,15 @@ class MainPanel extends JPanel {
         FontMetrics fontMetrics = g.getFontMetrics();
         String s = "TEST - PŁEĆ MÓZGU";
         int stringWidth = fontMetrics.stringWidth(s);
-        g.drawString(s, (mainPanelWidth - stringWidth) / 2, 40);
+        g.drawString(s, (panelWidth - stringWidth) / 2, 40);
     }
 
     private void paintBackground(Graphics g) {
         try {
             Image brain = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/brain.png"));
             new JLabel(new ImageIcon(brain));
-            g.drawImage(brain, mainPanelWidth / 2 - brain.getWidth(null) / 8, 50, brain.getWidth(null) / 4, brain.getHeight(null) / 4, null);
+            g.drawImage(brain, panelWidth / 2 - brain.getWidth(null) / 8, 60,
+                    brain.getWidth(null) / 4, brain.getHeight(null) / 4, null);
         } catch (Exception e) {
             e.printStackTrace();
         }

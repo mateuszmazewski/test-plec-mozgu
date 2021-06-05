@@ -12,14 +12,12 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
-        int mainPanelWidth = 800 + getInsets().left;
-        int mainPanelHeight = 600 + getInsets().top;
+        int mainPanelWidth = 800;
+        int mainPanelHeight = 600;
         MainPanel mainPanel = new MainPanel(this, mainPanelWidth, mainPanelHeight);
-        mainPanel.setSize(mainPanelWidth, mainPanelHeight);
 
-        add(mainPanel);
         setContentPane(mainPanel); //Po uruchomieniu widoczne jest menu główne
-        setSize(mainPanel.getSize());
+        pack(); //Dopasowanie rozmiaru okna do rozmiaru panelu
         setLocationRelativeTo(null); //Okno na środku ekranu
         setResizable(false); //Nie można zmieniać rozmiaru okna
         setVisible(true);

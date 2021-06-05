@@ -2,13 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class InfoPanel extends JPanel {
-    private final int infoPanelWidth;
-    private final int infoPanelHeight;
+    private final int panelWidth;
+    private final int panelHeight;
 
     public InfoPanel(MainPanel mainPanel, int width, int height) {
-        infoPanelWidth = width;
-        infoPanelHeight = height;
+        panelWidth = width;
+        panelHeight = height;
         setLayout(null);
+        setPreferredSize(new Dimension(panelWidth, panelHeight));
         setVisible(true);
 
         JButton returnButton = new JButton("Powrót do menu");
@@ -34,7 +35,7 @@ public class InfoPanel extends JPanel {
         FontMetrics fontMetrics = g.getFontMetrics();
         String s = "INFORMACJE";
         int stringWidth = fontMetrics.stringWidth(s);
-        g.drawString(s, (infoPanelWidth - stringWidth) / 2, 50);
+        g.drawString(s, (panelWidth - stringWidth) / 2, 50);
     }
 
     public void drawString(Graphics g, String text, int x, int y) {

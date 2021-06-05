@@ -29,8 +29,8 @@ public class ResultsCalculator {
                     }
                     break;
                 }
-                case b: //Odpowiedzi b i c są punktowane tak samo w obu testach
-                case x: {
+                case b: //W obu testach b = 5 pkt, c = -5 pkt
+                case x: { //b i brak odpowiedzi punktowane tak samo
                     ans.append("5 pkt\n");
                     points += 5;
                     break;
